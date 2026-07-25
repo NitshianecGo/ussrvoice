@@ -16,6 +16,7 @@
   --gold: #ffd700;
   --amber: #ffaa00;
   --panel: #0d1a0d;
+  --cyan: #00ffff;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,7 +31,6 @@ body {
   position: relative;
 }
 
-/* CRT эффект */
 body::before {
   content: " ";
   position: fixed;
@@ -49,7 +49,6 @@ body::before {
   100% { opacity: 0.98; }
 }
 
-/* Шапка */
 .header {
   text-align: center;
   padding: 12px;
@@ -84,7 +83,6 @@ h1 {
   letter-spacing: 2px;
 }
 
-/* Основной контейнер */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -98,7 +96,6 @@ h1 {
   .container { grid-template-columns: 1fr; }
 }
 
-/* Панели */
 .panel {
   border: 3px double var(--red);
   background: var(--panel);
@@ -120,7 +117,6 @@ h1 {
   gap: 8px;
 }
 
-/* Видео зона */
 .video-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -134,6 +130,9 @@ h1 {
   border: 2px solid var(--dim);
   aspect-ratio: 16/9;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 video {
@@ -143,9 +142,7 @@ video {
   display: block;
 }
 
-video.remote {
-  filter: contrast(1.1) brightness(1.05);
-}
+video.remote { filter: contrast(1.1) brightness(1.05); }
 
 .local-video-wrapper {
   position: absolute;
@@ -157,6 +154,9 @@ video.remote {
   background: #000;
   z-index: 10;
   box-shadow: 0 0 15px rgba(255,215,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 600px) {
@@ -165,8 +165,7 @@ video.remote {
 
 .video-label {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 4px; left: 4px;
   background: rgba(0,0,0,0.7);
   color: var(--fg);
   font-size: 10px;
@@ -176,7 +175,22 @@ video.remote {
   z-index: 11;
 }
 
-/* Индикаторы статуса */
+.no-signal {
+  color: var(--dim);
+  font-size: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.no-signal::before {
+  content: "📡 ";
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+  animation: pulse 2s infinite;
+}
+
 .status-bar {
   display: flex;
   gap: 15px;
@@ -195,8 +209,7 @@ video.remote {
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 8px; height: 8px;
   border-radius: 50%;
   background: #333;
   box-shadow: 0 0 4px currentColor;
@@ -205,13 +218,13 @@ video.remote {
 .status-dot.active { background: var(--fg); animation: pulse 1s infinite; }
 .status-dot.warn { background: var(--amber); }
 .status-dot.danger { background: var(--red); animation: pulse 0.5s infinite; }
+.status-dot.offline { background: #444; }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
 
-/* Кнопки */
 .btn {
   background: linear-gradient(180deg, #2a0000, #1a0000);
   color: var(--fg);
@@ -238,7 +251,6 @@ video.remote {
 }
 
 .btn:active:not(:disabled) { transform: translateY(1px); }
-
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -256,10 +268,18 @@ video.remote {
   box-shadow: 0 0 15px rgba(255,215,0,0.3);
 }
 
-/* Поля ввода */
-.input-group {
-  margin-bottom: 10px;
+.btn-cyan {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: linear-gradient(180deg, #002a2a, #001a1a);
 }
+
+.btn-cyan:hover:not(:disabled) {
+  background: linear-gradient(180deg, #004a4a, #002a2a);
+  box-shadow: 0 0 15px rgba(0,255,255,0.3);
+}
+
+.input-group { margin-bottom: 10px; }
 
 label {
   display: block;
@@ -287,7 +307,6 @@ textarea:focus, input:focus {
   box-shadow: 0 0 8px rgba(204,0,0,0.2);
 }
 
-/* Секретный код */
 .code-display {
   background: #000;
   border: 2px solid var(--gold);
@@ -311,7 +330,6 @@ textarea:focus, input:focus {
 
 .code-timer.urgent { animation: pulse 0.3s infinite; }
 
-/* Чат */
 .chat-box {
   height: 200px;
   overflow-y: auto;
@@ -328,27 +346,12 @@ textarea:focus, input:focus {
   border-left: 2px solid var(--dim);
 }
 
-.chat-msg.local {
-  border-left-color: var(--gold);
-  color: var(--amber);
-}
+.chat-msg.local { border-left-color: var(--gold); color: var(--amber); }
+.chat-msg.system { border-left-color: var(--red); color: var(--red); font-style: italic; }
 
-.chat-msg.system {
-  border-left-color: var(--red);
-  color: var(--red);
-  font-style: italic;
-}
+.chat-input-row { display: flex; gap: 6px; }
+.chat-input-row input { flex: 1; }
 
-.chat-input-row {
-  display: flex;
-  gap: 6px;
-}
-
-.chat-input-row input {
-  flex: 1;
-}
-
-/* Боковая панель инфо */
 .info-text {
   font-size: 11px;
   line-height: 1.6;
@@ -356,11 +359,8 @@ textarea:focus, input:focus {
   margin-top: 10px;
 }
 
-.info-text strong {
-  color: var(--amber);
-}
+.info-text strong { color: var(--amber); }
 
-/* Модальное окно */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -375,7 +375,7 @@ textarea:focus, input:focus {
   border: 4px double var(--red);
   background: var(--bg);
   padding: 24px;
-  max-width: 400px;
+  max-width: 420px;
   width: 90%;
   text-align: center;
   box-shadow: 0 0 40px rgba(204,0,0,0.3);
@@ -396,37 +396,29 @@ textarea:focus, input:focus {
 
 .hidden { display: none !important; }
 
-/* Полоса прокрутки */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #000; }
 ::-webkit-scrollbar-thumb { background: var(--dim); border: 1px solid var(--red); }
 
-/* Звуковая индикация */
-.audio-visualizer {
+.media-controls {
   display: flex;
-  gap: 2px;
-  height: 20px;
-  align-items: flex-end;
-  justify-content: center;
-  margin-top: 4px;
-}
-
-.bar {
-  width: 4px;
-  background: var(--fg);
-  transition: height 0.1s;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--dim);
 }
 </style>
 </head>
 <body>
 
-<!-- Стартовое окно -->
 <div id="startModal" class="modal-overlay">
   <div class="modal">
     <h2>★ ДОПУСК К СЕКРЕТНОМУ КАНАЛУ ★</h2>
     <p>Гражданин! Вы входите в систему прямой защищённой связи.<br><br>
-    Для участия в переговорах требуется разрешение на использование микрофона и камеры.<br><br>
-    <strong>ВНИМАНИЕ:</strong> Каждый секретный код действителен 5 минут.</p>
+    <strong>Камера и микрофон необязательны.</strong><br>
+    Комната создаётся без них — вы сможете подключить их позже или вести переговоры через текстовый канал.<br><br>
+    Для текстовой связи разрешения не требуется.</p>
     <button class="btn" onclick="app.init()" style="font-size:14px;padding:12px 24px;">
       ПОЛУЧИТЬ ДОПУСК
     </button>
@@ -439,18 +431,17 @@ textarea:focus, input:focus {
 </div>
 
 <div class="container">
-  <!-- Левая колонка — видео -->
   <div>
     <div class="panel">
       <div class="panel-title">📹 КАНАЛ ВИДЕОНАБЛЮДЕНИЯ</div>
       
       <div class="status-bar">
         <div class="status-item">
-          <div class="status-dot" id="dotCam"></div>
+          <div class="status-dot offline" id="dotCam"></div>
           <span>КАМЕРА</span>
         </div>
         <div class="status-item">
-          <div class="status-dot" id="dotMic"></div>
+          <div class="status-dot offline" id="dotMic"></div>
           <span>МИКРОФОН</span>
         </div>
         <div class="status-item">
@@ -461,31 +452,38 @@ textarea:focus, input:focus {
           <div class="status-dot active" id="dotEncrypt"></div>
           <span>ШИФРОВАНИЕ E2EE</span>
         </div>
+        <div class="status-item">
+          <div class="status-dot active" id="dotData"></div>
+          <span>ТЕКСТ. КАНАЛ</span>
+        </div>
       </div>
 
       <div class="video-grid">
         <div class="video-wrapper" id="remoteWrapper">
           <div class="video-label">📡 АБОНЕНТ</div>
-          <video id="remoteVideo" class="remote" autoplay playsinline></video>
-          <div class="local-video-wrapper">
-            <div class="video-label" style="font-size:9px;">ВЫ</div>
-            <video id="localVideo" autoplay playsinline muted></video>
-          </div>
+          <div class="no-signal" id="remoteNoSignal">СИГНАЛ ОТСУТСТВУЕТ</div>
+          <video id="remoteVideo" class="remote hidden" autoplay playsinline></video>
         </div>
       </div>
 
-      <div class="audio-visualizer" id="visualizer"></div>
+      <div class="local-video-wrapper" id="localWrapper">
+        <div class="video-label" style="font-size:9px;">ВЫ</div>
+        <div class="no-signal" style="font-size:10px;" id="localNoSignal">КАМЕРА ОТКЛЮЧЕНА</div>
+        <video id="localVideo" class="hidden" autoplay playsinline muted></video>
+      </div>
 
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+      <div class="media-controls">
+        <button class="btn btn-cyan" id="btnGetMedia" onclick="app.getMedia()">
+          📷 ПОДКЛЮЧИТЬ КАМЕРУ/МИКРОФОН
+        </button>
         <button class="btn" id="btnStart" onclick="app.createOffer()">🎯 УСТАНОВИТЬ КАНАЛ</button>
         <button class="btn btn-gold" id="btnAnswer" onclick="app.showAnswerInput()">📞 ПРИНЯТЬ ВЫЗОВ</button>
         <button class="btn" id="btnHangup" onclick="app.hangup()" disabled style="border-color:#666;">❌ ЗАВЕРШИТЬ ПЕРЕГОВОРЫ</button>
-        <button class="btn" onclick="app.toggleMute()" id="btnMute">🎙 МИКРОФОН ВКЛ</button>
-        <button class="btn" onclick="app.toggleVideo()" id="btnVideo">📹 КАМЕРА ВКЛ</button>
+        <button class="btn" onclick="app.toggleMute()" id="btnMute" disabled>🎙 МИКРОФОН ВКЛ</button>
+        <button class="btn" onclick="app.toggleVideo()" id="btnVideo" disabled>📹 КАМЕРА ВКЛ</button>
       </div>
     </div>
 
-    <!-- Панель ввода ответа (скрыта по умолчанию) -->
     <div class="panel hidden" id="answerPanel" style="margin-top:10px;">
       <div class="panel-title">📨 ВСТАВИТЬ ОТВЕТ АБОНЕНТА</div>
       <div class="input-group">
@@ -496,7 +494,6 @@ textarea:focus, input:focus {
     </div>
   </div>
 
-  <!-- Правая колонка — управление -->
   <div>
     <div class="panel">
       <div class="panel-title">🔐 СЕКРЕТНЫЙ КОД ДОСТУПА</div>
@@ -506,7 +503,7 @@ textarea:focus, input:focus {
       </div>
       
       <div class="code-display" id="codeDisplay">
-        [КОД НЕ СГЕНЕРИРОВАН. НАЖМИТЕ «УСТАНОВИТЬ КАНАЛ»]
+        [КОМНАТА НЕ СОЗДАНА. НАЖМИТЕ «УСТАНОВИТЬ КАНАЛ»]
       </div>
       
       <button class="btn" onclick="app.copyCode()" style="width:100%;margin-bottom:6px;">
@@ -518,20 +515,20 @@ textarea:focus, input:focus {
 
       <div class="info-text">
         <strong>ИНСТРУКЦИЯ:</strong><br>
-        1. Нажмите «УСТАНОВИТЬ КАНАЛ»<br>
+        1. Нажмите «УСТАНОВИТЬ КАНАЛ» (камера не нужна)<br>
         2. Скопируйте секретный код<br>
-        3. Передайте код абоненту (любым способом)<br>
-        4. Абонент нажимает «ПРИНЯТЬ ВЫЗОВ» и вставляет код<br>
-        5. Абонент отправляет вам код ответа<br>
+        3. Передайте код товарищу (любым способом)<br>
+        4. Товарищ нажимает «ПРИНЯТЬ ВЫЗОВ» и вставляет код<br>
+        5. Товарищ отправляет вам код ответа<br>
         6. Вставьте код ответа в панель ниже<br><br>
-        <strong>БЕЗОПАСНОСТЬ:</strong> Прямое P2P-соединение. Данные не проходят через сервера. Код действует 5 минут, после чего коммутатор генерирует новый.
+        <strong>БЕЗОПАСНОСТЬ:</strong> Прямое P2P. Данные не проходят через сервера. Код действует 5 минут. Можно пользоваться только текстом — камера подключается отдельно.
       </div>
     </div>
 
     <div class="panel" style="margin-top:10px;">
       <div class="panel-title">💬 ТЕКСТОВЫЙ КАНАЛ (DATA CHANNEL)</div>
       <div class="chat-box" id="chatBox">
-        <div class="chat-msg system">[СИСТЕМА] Канал данных ожидает соединения...</div>
+        <div class="chat-msg system">[СИСТЕМА] Канал данных ожидает создания комнаты...</div>
       </div>
       <div class="chat-input-row">
         <input type="text" id="chatInput" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter')app.sendChat()">
@@ -554,43 +551,72 @@ const app = {
   isMuted: false,
   isVideoOff: false,
   audioContext: null,
-  analyser: null,
+  hasMedia: false,
 
-  // Конфигурация ICE (для РФ рекомендуется свой TURN)
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    // Добавьте свой TURN-сервер для работы за симметричными NAT:
-    // { urls: 'turn:your-server.com:3478', username: 'user', credential: 'pass' }
   ],
 
-  async init() {
+  init() {
     $('startModal').classList.add('hidden');
+    this.log('Система', 'Допуск получен. Комната готова к созданию. Камера необязательна.');
+    this.log('Система', 'Нажмите «УСТАНОВИТЬ КАНАЛ» для генерации секретного кода.');
+  },
+
+  async getMedia() {
     try {
       this.localStream = await navigator.mediaDevices.getUserMedia({ 
         video: { width: 1280, height: 720 }, 
         audio: true 
       });
       $('localVideo').srcObject = this.localStream;
+      $('localVideo').classList.remove('hidden');
+      $('localNoSignal').classList.add('hidden');
+      this.hasMedia = true;
       this.setDot('dotCam', true);
       this.setDot('dotMic', true);
-      this.log('Система', 'Допуск получен. Камера и микрофон активны.');
-      this.initAudioVisualizer();
+      $('btnMute').disabled = false;
+      $('btnVideo').disabled = false;
+      $('btnGetMedia').disabled = true;
+      $('btnGetMedia').textContent = '✅ КАМЕРА ПОДКЛЮЧЕНА';
+      this.log('Система', 'Камера и микрофон активированы.');
+      
+      // Если соединение уже есть — добавляем треки
+      if (this.pc) {
+        this.localStream.getTracks().forEach(track => {
+          this.pc.addTrack(track, this.localStream);
+        });
+        // Пересогласование
+        const offer = await this.pc.createOffer();
+        await this.pc.setLocalDescription(offer);
+        await this.waitForIceGathering();
+        this.currentOffer = this.pc.localDescription;
+        this.generateCode();
+        this.startTimer();
+        this.log('Система', 'Код обновлён с учётом новых треков. Передайте товарищу.');
+      }
     } catch (err) {
-      alert('ГРАЖДАНИН! Не удалось получить доступ к камере/микрофону. Проверьте разрешения.\n\n' + err.message);
+      this.log('Система', 'Не удалось получить доступ к камере: ' + err.message);
+      alert('ГРАЖДАНИН! Не удалось получить доступ к камере/микрофону.\nПереговоры возможны в текстовом режиме.\n\n' + err.message);
     }
   },
 
   createPeerConnection() {
     const pc = new RTCPeerConnection({ iceServers: this.iceServers });
     
-    this.localStream.getTracks().forEach(track => {
-      pc.addTrack(track, this.localStream);
-    });
+    // Добавляем медиа-треки ТОЛЬКО если они есть
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => {
+        pc.addTrack(track, this.localStream);
+      });
+    }
 
     pc.ontrack = (e) => {
       if (e.streams && e.streams[0]) {
         $('remoteVideo').srcObject = e.streams[0];
+        $('remoteVideo').classList.remove('hidden');
+        $('remoteNoSignal').classList.add('hidden');
         this.setDot('dotConn', true);
         this.log('Система', 'Абонент подключён. Канал установлен.');
         this.playTone(800, 0.2);
@@ -614,8 +640,6 @@ const app = {
   },
 
   async createOffer() {
-    if (!this.localStream) return this.init();
-    
     this.hangup();
     this.pc = this.createPeerConnection();
     
@@ -624,8 +648,6 @@ const app = {
 
     const offer = await this.pc.createOffer();
     await this.pc.setLocalDescription(offer);
-
-    // Ждём ICE gathering
     await this.waitForIceGathering();
 
     this.currentOffer = this.pc.localDescription;
@@ -634,12 +656,11 @@ const app = {
     
     $('btnStart').disabled = true;
     $('btnHangup').disabled = false;
-    this.log('Система', 'Секретный код сгенерирован. Передайте его абоненту.');
+    this.log('Система', 'Комната создана. Секретный код сгенерирован. Передайте товарищу.');
     this.playTone(600, 0.1);
   },
 
   showAnswerInput() {
-    if (!this.localStream) return this.init();
     $('answerPanel').classList.remove('hidden');
     $('answerPanel').scrollIntoView({ behavior: 'smooth' });
   },
@@ -651,18 +672,15 @@ const app = {
     try {
       const data = JSON.parse(atob(raw));
       if (Date.now() - data.ts > 300000) {
-        return alert('КОД ПРОСРОЧЕН! Запросите новый код у абонента.');
+        return alert('КОД ПРОСРОЧЕН! Запросите новый код у товарища.');
       }
 
       this.hangup();
       this.pc = this.createPeerConnection();
 
-      // Если мы отвечаем, значит получили offer
       await this.pc.setRemoteDescription(new RTCSessionDescription(data.answer || data));
       
-      // Создаём answer (если мы callee)
       if (data.type === 'offer') {
-        // Мы получили offer, создаём answer
         this.dataChannel = this.pc.createDataChannel('sovietChat', { ordered: true });
         this.setupDataChannel(this.dataChannel);
         
@@ -670,7 +688,6 @@ const app = {
         await this.pc.setLocalDescription(answer);
         await this.waitForIceGathering();
         
-        // Показываем answer код для передачи обратно
         const answerCode = btoa(JSON.stringify({
           ...this.pc.localDescription,
           ts: Date.now()
@@ -680,7 +697,6 @@ const app = {
         $('codeTimer').textContent = 'ОЖИДАНИЕ ПОДТВЕРЖДЕНИЯ';
         this.log('Система', 'Код ответа сгенерирован. Передайте его инициатору.');
       } else {
-        // Мы получили answer на наш offer
         this.log('Система', 'Ответ принят. Установка соединения...');
       }
 
@@ -691,27 +707,18 @@ const app = {
     }
   },
 
-  // Для инициатора: принимаем answer от callee
-  async handleIncomingAnswer(answerData) {
-    try {
-      const data = JSON.parse(atob(answerData));
-      if (Date.now() - data.ts > 300000) {
-        return alert('КОД ОТВЕТА ПРОСРОЧЕН!');
-      }
-      await this.pc.setRemoteDescription(new RTCSessionDescription(data));
-      this.log('Система', 'Соединение подтверждено. Канал активен.');
-    } catch (e) {
-      alert('ОШИБКА ПРИЁМА ОТВЕТА: ' + e.message);
-    }
-  },
-
   setupDataChannel(channel) {
     channel.onopen = () => {
-      this.log('Система', 'Текстовый канал открыт.');
+      this.setDot('dotData', true);
+      this.log('Система', 'Текстовый канал открыт. Можно вести переговоры.');
     };
     channel.onmessage = (e) => {
       this.log('Абонент', e.data);
       this.playTone(1200, 0.05);
+    };
+    channel.onclose = () => {
+      this.setDot('dotData', false);
+      this.log('Система', 'Текстовый канал закрыт.');
     };
     this.dataChannel = channel;
   },
@@ -795,10 +802,13 @@ const app = {
     }
     this.dataChannel = null;
     $('remoteVideo').srcObject = null;
+    $('remoteVideo').classList.add('hidden');
+    $('remoteNoSignal').classList.remove('hidden');
     $('btnStart').disabled = false;
     $('btnHangup').disabled = true;
     $('answerPanel').classList.add('hidden');
     this.setDot('dotConn', false);
+    this.setDot('dotData', false);
     if (this.codeTimer) clearInterval(this.codeTimer);
     $('codeTimer').textContent = '05:00';
     $('codeTimer').classList.remove('urgent');
@@ -824,8 +834,9 @@ const app = {
 
   setDot(id, active) {
     const dot = $(id);
+    dot.classList.remove('active', 'offline');
     if (active) dot.classList.add('active');
-    else dot.classList.remove('active');
+    else dot.classList.add('offline');
   },
 
   log(who, text) {
@@ -852,44 +863,8 @@ const app = {
       osc.start();
       osc.stop(this.audioContext.currentTime + duration);
     } catch(e) {}
-  },
-
-  initAudioVisualizer() {
-    const container = $('visualizer');
-    for (let i = 0; i < 20; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'bar';
-      bar.style.height = '2px';
-      container.appendChild(bar);
-    }
-    
-    try {
-      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const source = this.audioContext.createMediaStreamSource(this.localStream);
-      this.analyser = this.audioContext.createAnalyser();
-      this.analyser.fftSize = 64;
-      source.connect(this.analyser);
-      
-      const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-      const bars = container.querySelectorAll('.bar');
-      
-      const update = () => {
-        if (!this.analyser) return;
-        this.analyser.getByteFrequencyData(dataArray);
-        bars.forEach((bar, i) => {
-          const val = dataArray[i] || 0;
-          bar.style.height = Math.max(2, val / 4) + 'px';
-          bar.style.opacity = val > 50 ? 1 : 0.5;
-        });
-        requestAnimationFrame(update);
-      };
-      update();
-    } catch(e) {}
   }
 };
-
-// Глобальная функция для удобства вставки answer-кода
-window.handleAnswerCode = (code) => app.handleIncomingAnswer(code);
 </script>
 
 </body>
