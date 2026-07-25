@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0f0a">
+<title>★ ГЛАВНЫЙ ШТАБ СВЯЗИ ★</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+
+:root {
+  --bg: #0a0f0a;
+  --fg: #33ff33;
+  --dim: #1a5c1a;
+  --red: #cc0000;
+  --gold: #ffd700;
+  --amber: #ffaa00;
+  --panel: #0d1a0d;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'PT Mono', 'Courier New', monospace;
+  font-size: 14px;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* CRT эффект */
+body::before {
+  content: " ";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.15) 50%),
+              linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
+  background-size: 100% 3px, 4px 100%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  50% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+/* Шапка */
+.header {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 4px double var(--red);
+  background: linear-gradient(180deg, #1a0a0a 0%, var(--bg) 100%);
+  position: relative;
+}
+
+.header::before, .header::after {
+  content: "★";
+  color: var(--gold);
+  font-size: 24px;
+  position: absolute;
+  top: 10px;
+}
+
+.header::before { left: 15px; }
+.header::after { right: 15px; }
+
+h1 {
+  font-size: 18px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(204,0,0,0.5);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 2px;
+}
+
+/* Основной контейнер */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .container { grid-template-columns: 1fr; }
+}
+
+/* Панели */
+.panel {
+  border: 3px double var(--red);
+  background: var(--panel);
+  padding: 12px;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.panel-title {
+  color: var(--gold);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 1px solid var(--dim);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Видео зона */
+.video-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.video-wrapper {
+  position: relative;
+  background: #000;
+  border: 2px solid var(--dim);
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+video.remote {
+  filter: contrast(1.1) brightness(1.05);
+}
+
+.local-video-wrapper {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 160px;
+  height: 90px;
+  border: 2px solid var(--gold);
+  background: #000;
+  z-index: 10;
+  box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+@media (max-width: 600px) {
+  .local-video-wrapper { width: 100px; height: 56px; }
+}
+
+.video-label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0,0,0,0.7);
+  color: var(--fg);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-left: 2px solid var(--red);
+  text-transform: uppercase;
+  z-index: 11;
+}
+
+/* Индикаторы статуса */
+.status-bar {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: rgba(0,20,0,0.3);
+  border: 1px solid var(--dim);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  box-shadow: 0 0 4px currentColor;
+}
+
+.status-dot.active { background: var(--fg); animation: pulse 1s infinite; }
+.status-dot.warn { background: var(--amber); }
+.status-dot.danger { background: var(--red); animation: pulse 0.5s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Кнопки */
+.btn {
+  background: linear-gradient(180deg, #2a0000, #1a0000);
+  color: var(--fg);
+  border: 2px solid var(--red);
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #4a0000, #2a0000);
+  box-shadow: 0 0 15px rgba(204,0,0,0.4);
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) { transform: translateY(1px); }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #444;
+}
+
+.btn-gold {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: linear-gradient(180deg, #2a2000, #1a1000);
+}
+
+.btn-gold:hover:not(:disabled) {
+  background: linear-gradient(180deg, #4a4000, #2a2000);
+  box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+/* Поля ввода */
+.input-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  color: var(--amber);
+}
+
+textarea, input[type="text"] {
+  width: 100%;
+  background: #000;
+  color: var(--fg);
+  border: 1px solid var(--dim);
+  padding: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  resize: vertical;
+}
+
+textarea:focus, input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 8px rgba(204,0,0,0.2);
+}
+
+/* Секретный код */
+.code-display {
+  background: #000;
+  border: 2px solid var(--gold);
+  padding: 10px;
+  font-size: 11px;
+  word-break: break-all;
+  color: var(--gold);
+  margin-bottom: 8px;
+  position: relative;
+  min-height: 60px;
+}
+
+.code-timer {
+  text-align: center;
+  font-size: 18px;
+  color: var(--red);
+  letter-spacing: 3px;
+  margin: 8px 0;
+  text-shadow: 0 0 10px rgba(204,0,0,0.5);
+}
+
+.code-timer.urgent { animation: pulse 0.3s infinite; }
+
+/* Чат */
+.chat-box {
+  height: 200px;
+  overflow-y: auto;
+  background: #000;
+  border: 1px solid var(--dim);
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.chat-msg {
+  margin-bottom: 6px;
+  padding-left: 8px;
+  border-left: 2px solid var(--dim);
+}
+
+.chat-msg.local {
+  border-left-color: var(--gold);
+  color: var(--amber);
+}
+
+.chat-msg.system {
+  border-left-color: var(--red);
+  color: var(--red);
+  font-style: italic;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.chat-input-row input {
+  flex: 1;
+}
+
+/* Боковая панель инфо */
+.info-text {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--dim);
+  margin-top: 10px;
+}
+
+.info-text strong {
+  color: var(--amber);
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal {
+  border: 4px double var(--red);
+  background: var(--bg);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(204,0,0,0.3);
+}
+
+.modal h2 {
+  color: var(--red);
+  font-size: 16px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.modal p {
+  font-size: 12px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.hidden { display: none !important; }
+
+/* Полоса прокрутки */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: var(--dim); border: 1px solid var(--red); }
+
+/* Звуковая индикация */
+.audio-visualizer {
+  display: flex;
+  gap: 2px;
+  height: 20px;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.bar {
+  width: 4px;
+  background: var(--fg);
+  transition: height 0.1s;
+}
+</style>
+</head>
+<body>
+
+<!-- Стартовое окно -->
+<div id="startModal" class="modal-overlay">
+  <div class="modal">
+    <h2>★ ДОПУСК К СЕКРЕТНОМУ КАНАЛУ ★</h2>
+    <p>Гражданин! Вы входите в систему прямой защищённой связи.<br><br>
+    Для участия в переговорах требуется разрешение на использование микрофона и камеры.<br><br>
+    <strong>ВНИМАНИЕ:</strong> Каждый секретный код действителен 5 минут.</p>
+    <button class="btn" onclick="app.init()" style="font-size:14px;padding:12px 24px;">
+      ПОЛУЧИТЬ ДОПУСК
+    </button>
+  </div>
+</div>
+
+<div class="header">
+  <h1>Главный Штаб Связи</h1>
+  <div class="subtitle">ПРЯМОЕ ЗАЩИЩЁННОЕ СОЕДИНЕНИЕ • КОНФИДЕНЦИАЛЬНО</div>
+</div>
+
+<div class="container">
+  <!-- Левая колонка — видео -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">📹 КАНАЛ ВИДЕОНАБЛЮДЕНИЯ</div>
+      
+      <div class="status-bar">
+        <div class="status-item">
+          <div class="status-dot" id="dotCam"></div>
+          <span>КАМЕРА</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" id="dotMic"></div>
+          <span>МИКРОФОН</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" id="dotConn"></div>
+          <span>СОЕДИНЕНИЕ</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot active" id="dotEncrypt"></div>
+          <span>ШИФРОВАНИЕ E2EE</span>
+        </div>
+      </div>
+
+      <div class="video-grid">
+        <div class="video-wrapper" id="remoteWrapper">
+          <div class="video-label">📡 АБОНЕНТ</div>
+          <video id="remoteVideo" class="remote" autoplay playsinline></video>
+          <div class="local-video-wrapper">
+            <div class="video-label" style="font-size:9px;">ВЫ</div>
+            <video id="localVideo" autoplay playsinline muted></video>
+          </div>
+        </div>
+      </div>
+
+      <div class="audio-visualizer" id="visualizer"></div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+        <button class="btn" id="btnStart" onclick="app.createOffer()">🎯 УСТАНОВИТЬ КАНАЛ</button>
+        <button class="btn btn-gold" id="btnAnswer" onclick="app.showAnswerInput()">📞 ПРИНЯТЬ ВЫЗОВ</button>
+        <button class="btn" id="btnHangup" onclick="app.hangup()" disabled style="border-color:#666;">❌ ЗАВЕРШИТЬ ПЕРЕГОВОРЫ</button>
+        <button class="btn" onclick="app.toggleMute()" id="btnMute">🎙 МИКРОФОН ВКЛ</button>
+        <button class="btn" onclick="app.toggleVideo()" id="btnVideo">📹 КАМЕРА ВКЛ</button>
+      </div>
+    </div>
+
+    <!-- Панель ввода ответа (скрыта по умолчанию) -->
+    <div class="panel hidden" id="answerPanel" style="margin-top:10px;">
+      <div class="panel-title">📨 ВСТАВИТЬ ОТВЕТ АБОНЕНТА</div>
+      <div class="input-group">
+        <label>Вставьте секретный код ответа от другого абонента:</label>
+        <textarea id="answerInput" rows="4" placeholder="ВСТАВЬТЕ КОД ОТВЕТА СЮДА..."></textarea>
+      </div>
+      <button class="btn btn-gold" onclick="app.acceptAnswer()">✅ УСТАНОВИТЬ СОЕДИНЕНИЕ</button>
+    </div>
+  </div>
+
+  <!-- Правая колонка — управление -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">🔐 СЕКРЕТНЫЙ КОД ДОСТУПА</div>
+      <div class="code-timer" id="codeTimer">05:00</div>
+      <div style="font-size:11px;text-align:center;color:var(--dim);margin-bottom:8px;">
+        ДЕЙСТВИТЕЛЕН ДО СМЕНЫ КОДА
+      </div>
+      
+      <div class="code-display" id="codeDisplay">
+        [КОД НЕ СГЕНЕРИРОВАН. НАЖМИТЕ «УСТАНОВИТЬ КАНАЛ»]
+      </div>
+      
+      <button class="btn" onclick="app.copyCode()" style="width:100%;margin-bottom:6px;">
+        📋 КОПИРОВАТЬ КОД
+      </button>
+      <button class="btn btn-gold" onclick="app.regenerateCode()" style="width:100%;">
+        🔄 СМЕНИТЬ КОД ДОСРОЧНО
+      </button>
+
+      <div class="info-text">
+        <strong>ИНСТРУКЦИЯ:</strong><br>
+        1. Нажмите «УСТАНОВИТЬ КАНАЛ»<br>
+        2. Скопируйте секретный код<br>
+        3. Передайте код абоненту (любым способом)<br>
+        4. Абонент нажимает «ПРИНЯТЬ ВЫЗОВ» и вставляет код<br>
+        5. Абонент отправляет вам код ответа<br>
+        6. Вставьте код ответа в панель ниже<br><br>
+        <strong>БЕЗОПАСНОСТЬ:</strong> Прямое P2P-соединение. Данные не проходят через сервера. Код действует 5 минут, после чего коммутатор генерирует новый.
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:10px;">
+      <div class="panel-title">💬 ТЕКСТОВЫЙ КАНАЛ (DATA CHANNEL)</div>
+      <div class="chat-box" id="chatBox">
+        <div class="chat-msg system">[СИСТЕМА] Канал данных ожидает соединения...</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter')app.sendChat()">
+        <button class="btn" onclick="app.sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const app = {
+  localStream: null,
+  pc: null,
+  dataChannel: null,
+  codeTimer: null,
+  timeLeft: 300,
+  currentOffer: null,
+  isMuted: false,
+  isVideoOff: false,
+  audioContext: null,
+  analyser: null,
+
+  // Конфигурация ICE (для РФ рекомендуется свой TURN)
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    // Добавьте свой TURN-сервер для работы за симметричными NAT:
+    // { urls: 'turn:your-server.com:3478', username: 'user', credential: 'pass' }
+  ],
+
+  async init() {
+    $('startModal').classList.add('hidden');
+    try {
+      this.localStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: 1280, height: 720 }, 
+        audio: true 
+      });
+      $('localVideo').srcObject = this.localStream;
+      this.setDot('dotCam', true);
+      this.setDot('dotMic', true);
+      this.log('Система', 'Допуск получен. Камера и микрофон активны.');
+      this.initAudioVisualizer();
+    } catch (err) {
+      alert('ГРАЖДАНИН! Не удалось получить доступ к камере/микрофону. Проверьте разрешения.\n\n' + err.message);
+    }
+  },
+
+  createPeerConnection() {
+    const pc = new RTCPeerConnection({ iceServers: this.iceServers });
+    
+    this.localStream.getTracks().forEach(track => {
+      pc.addTrack(track, this.localStream);
+    });
+
+    pc.ontrack = (e) => {
+      if (e.streams && e.streams[0]) {
+        $('remoteVideo').srcObject = e.streams[0];
+        this.setDot('dotConn', true);
+        this.log('Система', 'Абонент подключён. Канал установлен.');
+        this.playTone(800, 0.2);
+      }
+    };
+
+    pc.oniceconnectionstatechange = () => {
+      if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
+        this.setDot('dotConn', true);
+      } else if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed') {
+        this.setDot('dotConn', false);
+        this.log('Система', 'Связь с абонентом потеряна.');
+      }
+    };
+
+    pc.ondatachannel = (e) => {
+      this.setupDataChannel(e.channel);
+    };
+
+    return pc;
+  },
+
+  async createOffer() {
+    if (!this.localStream) return this.init();
+    
+    this.hangup();
+    this.pc = this.createPeerConnection();
+    
+    this.dataChannel = this.pc.createDataChannel('sovietChat', { ordered: true });
+    this.setupDataChannel(this.dataChannel);
+
+    const offer = await this.pc.createOffer();
+    await this.pc.setLocalDescription(offer);
+
+    // Ждём ICE gathering
+    await this.waitForIceGathering();
+
+    this.currentOffer = this.pc.localDescription;
+    this.generateCode();
+    this.startTimer();
+    
+    $('btnStart').disabled = true;
+    $('btnHangup').disabled = false;
+    this.log('Система', 'Секретный код сгенерирован. Передайте его абоненту.');
+    this.playTone(600, 0.1);
+  },
+
+  showAnswerInput() {
+    if (!this.localStream) return this.init();
+    $('answerPanel').classList.remove('hidden');
+    $('answerPanel').scrollIntoView({ behavior: 'smooth' });
+  },
+
+  async acceptAnswer() {
+    const raw = $('answerInput').value.trim();
+    if (!raw) return alert('ВСТАВЬТЕ КОД ОТВЕТА!');
+
+    try {
+      const data = JSON.parse(atob(raw));
+      if (Date.now() - data.ts > 300000) {
+        return alert('КОД ПРОСРОЧЕН! Запросите новый код у абонента.');
+      }
+
+      this.hangup();
+      this.pc = this.createPeerConnection();
+
+      // Если мы отвечаем, значит получили offer
+      await this.pc.setRemoteDescription(new RTCSessionDescription(data.answer || data));
+      
+      // Создаём answer (если мы callee)
+      if (data.type === 'offer') {
+        // Мы получили offer, создаём answer
+        this.dataChannel = this.pc.createDataChannel('sovietChat', { ordered: true });
+        this.setupDataChannel(this.dataChannel);
+        
+        const answer = await this.pc.createAnswer();
+        await this.pc.setLocalDescription(answer);
+        await this.waitForIceGathering();
+        
+        // Показываем answer код для передачи обратно
+        const answerCode = btoa(JSON.stringify({
+          ...this.pc.localDescription,
+          ts: Date.now()
+        }));
+        
+        $('codeDisplay').textContent = answerCode;
+        $('codeTimer').textContent = 'ОЖИДАНИЕ ПОДТВЕРЖДЕНИЯ';
+        this.log('Система', 'Код ответа сгенерирован. Передайте его инициатору.');
+      } else {
+        // Мы получили answer на наш offer
+        this.log('Система', 'Ответ принят. Установка соединения...');
+      }
+
+      $('btnHangup').disabled = false;
+      this.playTone(800, 0.15);
+    } catch (e) {
+      alert('НЕВЕРНЫЙ ФОРМАТ КОДА!\n\n' + e.message);
+    }
+  },
+
+  // Для инициатора: принимаем answer от callee
+  async handleIncomingAnswer(answerData) {
+    try {
+      const data = JSON.parse(atob(answerData));
+      if (Date.now() - data.ts > 300000) {
+        return alert('КОД ОТВЕТА ПРОСРОЧЕН!');
+      }
+      await this.pc.setRemoteDescription(new RTCSessionDescription(data));
+      this.log('Система', 'Соединение подтверждено. Канал активен.');
+    } catch (e) {
+      alert('ОШИБКА ПРИЁМА ОТВЕТА: ' + e.message);
+    }
+  },
+
+  setupDataChannel(channel) {
+    channel.onopen = () => {
+      this.log('Система', 'Текстовый канал открыт.');
+    };
+    channel.onmessage = (e) => {
+      this.log('Абонент', e.data);
+      this.playTone(1200, 0.05);
+    };
+    this.dataChannel = channel;
+  },
+
+  sendChat() {
+    const input = $('chatInput');
+    const text = input.value.trim();
+    if (!text || !this.dataChannel || this.dataChannel.readyState !== 'open') {
+      if (!this.dataChannel || this.dataChannel.readyState !== 'open') {
+        this.log('Система', 'Канал данных не активен. Установите соединение.');
+      }
+      return;
+    }
+    this.dataChannel.send(text);
+    this.log('Вы', text);
+    input.value = '';
+  },
+
+  generateCode() {
+    if (!this.currentOffer) return;
+    const payload = {
+      type: this.currentOffer.type,
+      sdp: this.currentOffer.sdp,
+      ts: Date.now()
+    };
+    const code = btoa(JSON.stringify(payload));
+    $('codeDisplay').textContent = code;
+  },
+
+  regenerateCode() {
+    if (confirm('СМЕНИТЬ КОД? Текущий код станет недействительным.')) {
+      this.createOffer();
+    }
+  },
+
+  copyCode() {
+    const code = $('codeDisplay').textContent.trim();
+    if (!code || code.startsWith('[')) return;
+    navigator.clipboard.writeText(code).then(() => {
+      this.log('Система', 'Код скопирован в буфер обмена.');
+      this.playTone(1000, 0.1);
+    });
+  },
+
+  startTimer() {
+    this.timeLeft = 300;
+    if (this.codeTimer) clearInterval(this.codeTimer);
+    this.codeTimer = setInterval(() => {
+      this.timeLeft--;
+      const m = Math.floor(this.timeLeft / 60).toString().padStart(2, '0');
+      const s = (this.timeLeft % 60).toString().padStart(2, '0');
+      const el = $('codeTimer');
+      el.textContent = `${m}:${s}`;
+      
+      if (this.timeLeft <= 60) el.classList.add('urgent');
+      else el.classList.remove('urgent');
+
+      if (this.timeLeft <= 0) {
+        this.regenerateCode();
+      }
+    }, 1000);
+  },
+
+  waitForIceGathering() {
+    return new Promise((resolve) => {
+      if (this.pc.iceGatheringState === 'complete') return resolve();
+      const check = setInterval(() => {
+        if (this.pc.iceGatheringState === 'complete') {
+          clearInterval(check);
+          resolve();
+        }
+      }, 200);
+      setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+    });
+  },
+
+  hangup() {
+    if (this.pc) {
+      this.pc.close();
+      this.pc = null;
+    }
+    this.dataChannel = null;
+    $('remoteVideo').srcObject = null;
+    $('btnStart').disabled = false;
+    $('btnHangup').disabled = true;
+    $('answerPanel').classList.add('hidden');
+    this.setDot('dotConn', false);
+    if (this.codeTimer) clearInterval(this.codeTimer);
+    $('codeTimer').textContent = '05:00';
+    $('codeTimer').classList.remove('urgent');
+    $('codeDisplay').textContent = '[КАНАЛ ЗАКРЫТ. СГЕНЕРИРУЙТЕ НОВЫЙ КОД]';
+    this.log('Система', 'Переговоры завершены. Канал разъединён.');
+  },
+
+  toggleMute() {
+    if (!this.localStream) return;
+    this.isMuted = !this.isMuted;
+    this.localStream.getAudioTracks().forEach(t => t.enabled = !this.isMuted);
+    $('btnMute').textContent = this.isMuted ? '🎙 МИКРОФОН ВЫКЛ' : '🎙 МИКРОФОН ВКЛ';
+    this.setDot('dotMic', !this.isMuted);
+  },
+
+  toggleVideo() {
+    if (!this.localStream) return;
+    this.isVideoOff = !this.isVideoOff;
+    this.localStream.getVideoTracks().forEach(t => t.enabled = !this.isVideoOff);
+    $('btnVideo').textContent = this.isVideoOff ? '📹 КАМЕРА ВЫКЛ' : '📹 КАМЕРА ВКЛ';
+    this.setDot('dotCam', !this.isVideoOff);
+  },
+
+  setDot(id, active) {
+    const dot = $(id);
+    if (active) dot.classList.add('active');
+    else dot.classList.remove('active');
+  },
+
+  log(who, text) {
+    const box = $('chatBox');
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + (who === 'Вы' ? 'local' : who === 'Система' ? 'system' : '');
+    const time = new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    div.textContent = `[${time}] ${who}: ${text}`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  },
+
+  playTone(freq, duration) {
+    try {
+      if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = this.audioContext.createOscillator();
+      const gain = this.audioContext.createGain();
+      osc.connect(gain);
+      gain.connect(this.audioContext.destination);
+      osc.frequency.value = freq;
+      osc.type = 'square';
+      gain.gain.setValueAtTime(0.05, this.audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+      osc.start();
+      osc.stop(this.audioContext.currentTime + duration);
+    } catch(e) {}
+  },
+
+  initAudioVisualizer() {
+    const container = $('visualizer');
+    for (let i = 0; i < 20; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = '2px';
+      container.appendChild(bar);
+    }
+    
+    try {
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const source = this.audioContext.createMediaStreamSource(this.localStream);
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 64;
+      source.connect(this.analyser);
+      
+      const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+      const bars = container.querySelectorAll('.bar');
+      
+      const update = () => {
+        if (!this.analyser) return;
+        this.analyser.getByteFrequencyData(dataArray);
+        bars.forEach((bar, i) => {
+          const val = dataArray[i] || 0;
+          bar.style.height = Math.max(2, val / 4) + 'px';
+          bar.style.opacity = val > 50 ? 1 : 0.5;
+        });
+        requestAnimationFrame(update);
+      };
+      update();
+    } catch(e) {}
+  }
+};
+
+// Глобальная функция для удобства вставки answer-кода
+window.handleAnswerCode = (code) => app.handleIncomingAnswer(code);
+</script>
+
+</body>
+</html>
